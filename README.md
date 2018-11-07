@@ -94,6 +94,16 @@ $ make -j
 $ ./ml_test
 ```
 
+To list available test:
+```bash
+$./ml_test --gtest_list_tests
+```
+
+To launch test which fullname correspond to specific wildcard string:
+```bash
+$ ./ml_test --gtest_filter=*Pca*
+```
+
 ### Python Notebooks
 
 Demo notebooks can be found in python/notebooks folder.

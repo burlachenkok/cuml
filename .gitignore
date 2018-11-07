@@ -1,1 +1,7 @@
 *.swp
+
+cuML-build/
+cuml/build/
+
+ml-prims-build/
+ml-prims/build/

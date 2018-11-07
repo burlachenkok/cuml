@@ -29,6 +29,8 @@
 #include "ml_utils.h"
 #include "tsvd/tsvd.h"
 
+#include "../../external/ml-prims/src/utils/logger/LoggerMacroses.h" ///< TODO: Ask how proper include this
+
 namespace ML {
 
 using namespace MLCommon;
@@ -85,6 +87,21 @@ void pcaFit(math_t *input, math_t *components, math_t *explained_var,
 		math_t *noise_vars, paramsPCA prms, cublasHandle_t cublas_handle,
 		cusolverDnHandle_t cusolver_handle) {
 
+#if 0
+    //===========================================EXAMPLE OF USAGE ML_LOG_ERROR START==========================
+    ::ML::Utils::Logger mylog = ::ML::Utils::Logger::initializeWithEnvironment();
+    bool forceLogForTest = true;
+    ML_LOG_TOOLCHAIN_INFO(mylog);
+    if (! (prms.n_cols > 1) || forceLogForTest )
+        ML_LOG_ERROR(mylog) << "Parameter n_cols: number of columns cannot be less than two." << " And you provide: '" << prms.n_cols << "\n";
+    if (! (prms.n_rows > 1) || forceLogForTest )
+        ML_LOG_ERROR(mylog) << "Parameter n_rows: number of rows cannot be less than two." << " And you provide: '" << prms.n_rows << "\n";
+    if (! (prms.n_components > 0) || forceLogForTest )
+        ML_LOG_ERROR(mylog) << "Parameter n_components: number of components cannot be less than one." << " And you provide: '" << prms.n_components << "\n";
+    //===========================================EXAMPLE OF USAGE END=========================================
+#endif
+
+
 	ASSERT(prms.n_cols > 1,
 			"Parameter n_cols: number of columns cannot be less than two");
 	ASSERT(prms.n_rows > 1,
@@ -109,9 +126,14 @@ void pcaFit(math_t *input, math_t *components, math_t *explained_var,
 	math_t scalar = (prms.n_rows - 1);
 	Matrix::seqRoot(explained_var, singular_vals, scalar, prms.n_components);
 
-	CUDA_CHECK(cudaFree(cov));
-
-	Stats::meanAdd(input, mu, prms.n_cols, prms.n_rows, false);
+#if 0
+    //===========================================EXAMPLE OF USAGE ML_EVAL_EXPRESSION_AND_CHECK START=========
+    ML_EVAL_EXPRESSION_AND_CHECK(mylog, cudaFree(cov));
+    //===========================================EXAMPLE OF USAGE END=========================================
+#else
+    CUDA_CHECK(cudaFree(cov));
+#endif
+    Stats::meanAdd(input, mu, prms.n_cols, prms.n_rows, false);
 }
 
 /**
