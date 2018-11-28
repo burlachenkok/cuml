@@ -90,7 +90,9 @@ $ cd cuML
 $ mkdir build
 $ cd build
 $ cmake ..
-$ make -j
+$ make -j 
+$ # Instead of previous step if you like you can use cmake directly
+$ cmake --build . --config Release -- -j
 $ ./ml_test
 ```
 
